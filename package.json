@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/losfair/Botly.git"
+    "url": "git+https://github.com/losfair/botly-core.git"
   },
   "keywords": [
     "bot",
@@ -20,9 +20,9 @@
   "author": "Heyang Zhou",
   "license": "LGPL-3.0",
   "bugs": {
-    "url": "https://github.com/losfair/Botly/issues"
+    "url": "https://github.com/losfair/botly-core/issues"
   },
-  "homepage": "https://github.com/losfair/Botly#readme",
+  "homepage": "https://github.com/losfair/botly-core#readme",
   "dependencies": {
     "ice-node": "^0.1.8",
     "mongodb": "^2.2.30",
