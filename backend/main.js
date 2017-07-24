@@ -5,9 +5,11 @@ const rp = require("request-promise");
 const chat = require("./chat.js");
 const plugin = require("./plugin.js");
 const resources = require("./resources.js");
+const Message = require("./message.js");
 
 module.exports.chat = chat;
 module.exports.plugin = plugin;
+module.exports.Message = Message;
 
 const app = new ice.Ice();
 
@@ -126,8 +128,8 @@ app.get("/admin/index", req => new ice.Response({
     template_params: {}
 }));
 
-module.exports.run = run;
-async function run({
+module.exports.start = start;
+async function start({
     listen_addr = null,
     password_verifier = null,
     admin_user_id = null,

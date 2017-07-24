@@ -1,3 +1,5 @@
+const resources = require("./resources.js");
+
 let plugins = [];
 
 module.exports.run_chain = run_chain;
@@ -25,8 +27,15 @@ class Plugin {
         this.handle_message = handle_message;
     }
 
-    register() {
-        plugins[this.name] = this;
+    async register() {
+        let d = await resources.db.collection("disabled_plugins").find({
+            name: this.name
+        }).limit(1);
+        if(d && d.length) {
+            return false;
+        }
+        plugins.push(this);
+        return true;
     }
 }
 

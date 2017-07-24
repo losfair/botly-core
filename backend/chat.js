@@ -1,5 +1,6 @@
 const Message = require("./message.js");
 const plugin = require("./plugin.js");
+const resources = require("./resources.js");
 
 let providers = {};
 
@@ -13,8 +14,15 @@ class ChatProvider {
         this.send_message = send_message;
     }
 
-    register() {
+    async register() {
+        let d = await resources.db.collection("disabled_chat_providers").find({
+            name: this.name
+        }).limit(1);
+        if(d && d.length) {
+            return false;
+        }
         providers[this.name] = this;
+        return true;
     }
 }
 module.exports.ChatProvider = ChatProvider;
@@ -27,13 +35,13 @@ async function dispatch(msg) {
     if (msg.to_id) {
         let provider = providers[msg.to_chat_provider];
         if (!provider) {
-            throw new Error("Provider not found");
+            throw new Error("Provider not found: " + msg.to_chat_provider);
         }
         await provider.send_message(msg);
     } else if (msg.from_id) {
         let provider = providers[msg.from_chat_provider];
         if (!provider) {
-            throw new Error("Provider not found");
+            throw new Error("Provider not found: " + msg.from_chat_provider);
         }
         let p = plugin.run_chain(msg);
         if (!p) { // No plugin can handle this message

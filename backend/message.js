@@ -10,6 +10,7 @@ class Message {
         this.from_chat_provider = from_chat_provider;
         this.to_id = to_id;
         this.to_chat_provider = to_chat_provider;
+        this.content = content;
     }
 
     reply(content) {
