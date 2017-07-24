@@ -1,8 +1,10 @@
+const uuid = require("uuid");
 const Message = require("./message.js");
 const plugin = require("./plugin.js");
 const resources = require("./resources.js");
 
 let providers = {};
+module.exports.providers = providers;
 
 class ChatProvider {
     constructor({ name, send_message = null }) {
@@ -43,6 +45,7 @@ async function dispatch(msg) {
         if (!provider) {
             throw new Error("Provider not found: " + msg.from_chat_provider);
         }
+        await handle_incoming_message(msg);
         let p = plugin.run_chain(msg);
         if (!p) { // No plugin can handle this message
             return;
@@ -50,5 +53,14 @@ async function dispatch(msg) {
         await p.handle_message(msg);
     } else {
         throw new Error("Neither to_id nor from_id is specified for the message.");
+    }
+}
+
+async function handle_incoming_message(msg) {
+    msg.id = uuid.v4();
+    msg.create_time = Date.now();
+
+    if(resources.config.log_messages) {
+        await resources.db.collection("messages").insertOne(msg);
     }
 }

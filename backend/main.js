@@ -117,16 +117,36 @@ add_templates([
 // No caching etc. Use a reverse proxy in production.
 app.use("/static/", ice.static(path.join(__dirname, "../static")));
 
+app.get("/stats", req => ice.Response.json(req.get_stats()));
+
 app.use("/admin/", new ice.Flag("init_session"));
 app.use("/admin/", require_login);
 
 app.get("/", req => redirect("/admin/index"));
 app.get("/admin/", req => redirect("/admin/index"));
 
-app.get("/admin/index", req => new ice.Response({
-    template_name: "admin.html",
-    template_params: {}
-}));
+app.get("/admin/index", req => {
+    let config = [
+        {
+            key: "记录消息",
+            value: resources.config.log_messages ? "是" : "否"
+        },
+        {
+            key: "启用的插件",
+            value: plugin.plugins.map(v => v.name).join(", ")
+        },
+        {
+            key: "启用的 IM 服务",
+            value: Object.keys(chat.providers).join(", ")
+        }
+    ];
+    return new ice.Response({
+        template_name: "admin.html",
+        template_params: {
+            config: config
+        }
+    });
+});
 
 module.exports.start = start;
 async function start({
@@ -147,4 +167,14 @@ async function start({
     }
 
     app.listen(listen_addr);
+}
+
+module.exports.enable_message_logging = enable_message_logging;
+function enable_message_logging() {
+    resources.config.log_messages = true;
+}
+
+module.exports.disable_message_logging = disable_message_logging;
+function disable_message_logging() {
+    resources.config.log_messages = false;
 }

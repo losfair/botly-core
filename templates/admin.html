@@ -1,5 +1,25 @@
 {% extends "base.html" %}
 
-{% block body %}
+{% block title %}管理{% endblock title %}
 
+{% block body %}
+<div class="container">
+    <nav class="navbar fixed-top navbar-light bg-faded">
+        <a class="navbar-brand" href="#">Botly</a>
+    </nav>
+    <div class="main-content" style="padding-top: 80px">
+        <div class="card">
+            <div class="card-block">
+                <h3>配置</h3>
+                <p>
+                    <ul>
+                        {% for item in config %}
+                        <li>{{ item.key }}: <strong>{{ item.value }}</strong></li>
+                        {% endfor %}
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock body %}

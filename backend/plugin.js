@@ -40,3 +40,4 @@ class Plugin {
 }
 
 module.exports.Plugin = Plugin;
+module.exports.plugins = plugins;
